@@ -226,13 +226,12 @@
             const swfContainer = document.getElementById('swf-container');
             swfContainer.innerHTML = '';
             
-            // Загрузка плеера через официальный API Ruffle для защиты от CORS-блокировок GitHub
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             swfContainer.appendChild(player);
             
-            // Используем прямую ссылку на DEMO.swf из вашего релиза c кириллическим тегом 'ыыы'
-            player.load("https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/DEMO.swf");
+            // Если DEMO.swf лежит прямо в корне репозитория, CORS-ошибок не будет
+            player.load("DEMO.swf");
         }
 
         function initTooltips(selector, tooltipIdMap) {
@@ -253,7 +252,7 @@
         const classMap = {
             'battalion-ref': 'tooltip-battalion', 'fnaf-ref': 'tooltip-fnaf',
             'menu-alpha1-ref': 'tooltip-menu-alpha1', 'gazeta-ref': 'tooltip-gazeta',
-            'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-izба',
+            'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-изба',
             'izba-outside-ref': 'tooltip-izba-outside', 'kalash-ref': 'tooltip-kalash',
             'symphony-ref': 'tooltip-symphony', 'craylay-ref': 'tooltip-craylay'
         };
