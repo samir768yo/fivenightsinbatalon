@@ -63,6 +63,14 @@
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
         .swf-container ruffle-player { width: 100%; height: 100%; }
+        .demo-loading-text {
+            color: #ffffff;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            font-style: italic;
+        }
         .custom-tooltip {
             position: fixed; display: none; background-color: #000000; color: #ffffff; padding: 10px 14px;
             border-radius: 6px; font-size: 13px; max-width: 260px; z-index: 9999; pointer-events: none;
@@ -113,7 +121,7 @@
 
     <main class="main-container">
         <div class="content-box">
-            
+
             <div id="about" class="tab-content active">
                 <h2>Об игре</h2>
                 <p>Игра представляет собой мемную пародию на инди-игру <a href="https://store.steampowered.com/app/319510/Five_Nights_at_Freddys/" target="_blank" class="inline-game-link fnaf-ref">«Five Nights at Freddy's»</a>. В игре предстоит отбиваться от батальонышей: <span class="char-trigger" data-tooltip="colleague">Коллега</span>, <span class="char-trigger" data-tooltip="commander">Командирша</span>, <span class="char-trigger" data-tooltip="batya">Батя Барбоскин</span>, <span class="char-trigger" data-tooltip="gena">Гена Барбоскин</span> и <span class="char-trigger" data-tooltip="ded">Дед</span> из сериала <a href="https://web.archive.org/web/20150219210059/http://www.batalion-film.ru/about/sub/index.html" target="_blank" class="inline-game-link battalion-ref">«Женский Батальонъ»</a>.</p>
@@ -137,6 +145,7 @@
                 <div id="swf-container" class="swf-container">
                     <button class="play-demo-btn" onclick="startDemoGame()">Играть</button>
                 </div>
+                <p class="demo-loading-text"><em>Извиняемся если загрузка будет идти долго</em></p>
             </div>
 
             <div id="history" class="tab-content">
@@ -226,11 +235,11 @@
         function startDemoGame() {
             const swfContainer = document.getElementById('swf-container');
             swfContainer.innerHTML = '';
-            
+
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             swfContainer.appendChild(player);
-            
+
             // Загружаем локальный файл из корня сайта — как на Newgrounds, без CORS
             player.load("DEMO.swf");
         }
@@ -254,7 +263,7 @@
             'battalion-ref': 'tooltip-battalion', 'fnaf-ref': 'tooltip-fnaf',
             'menu-alpha1-ref': 'tooltip-menu-alpha1', 'gazeta-ref': 'tooltip-gazeta',
             'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-изба',
-            'izba-outside-ref': 'tooltip-изба-outside', 'kalash-ref': 'tooltip-kalash',
+            'izba-outside-ref': 'tooltip-izba-outside', 'kalash-ref': 'tooltip-kalash',
             'symphony-ref': 'tooltip-symphony', 'craylay-ref': 'tooltip-craylay'
         };
 
