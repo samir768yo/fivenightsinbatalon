@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пять ночей в батальоне</title>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Bookman Old Style', 'Bookman', serif; }
         body {
@@ -57,11 +56,10 @@
         .play-demo-btn, .contact-dev-btn { border-radius: 20px; }
         .contact-dev-btn { margin-top: 25px; font-size: 16px; }
         .swf-container {
-            width: 100%; max-width: 800px; aspect-ratio: 16 / 9; margin: 20px auto 0 auto;
-            border: 2px solid #ff0000; border-radius: 8px; overflow: hidden; background-color: #000000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
+            width: 100%; max-width: 800px; padding: 40px 20px; margin: 20px auto 0 auto;
+            border: 2px solid #ff0000; border-radius: 8px; background-color: #000000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px;
         }
-        .swf-container ruffle-player { width: 100%; height: 100%; }
         .custom-tooltip {
             position: fixed; display: none; background-color: #000000; color: #ffffff; padding: 10px 14px;
             border-radius: 6px; font-size: 13px; max-width: 260px; z-index: 9999; pointer-events: none;
@@ -132,9 +130,10 @@
 
             <div id="demo" class="tab-content">
                 <h2>DEMO-версия</h2>
-                <p>Поиграйте в DEMO-версию прямо в браузере</p>
-                <div id="swf-container" class="swf-container">
-                    <button class="play-demo-btn" onclick="startDemoGame()">Играть</button>
+                <p>Поиграйте в DEMO-версию прямо в браузере или скачайте файл игры:</p>
+                <div class="swf-container">
+                    <p style="color: #ffffff; font-size: 15px;">Для запуска DEMO в браузере нажмите кнопку ниже (требуется установленное расширение Ruffle или браузер с поддержкой Flash):</p>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/DEMO.swf" target="_blank" class="play-demo-btn">Открыть DEMO.swf в новой вкладке</a>
                 </div>
             </div>
 
@@ -222,18 +221,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        function startDemoGame() {
-            const swfContainer = document.getElementById('swf-container');
-            swfContainer.innerHTML = '';
-            
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            swfContainer.appendChild(player);
-            
-            // Если DEMO.swf лежит прямо в корне репозитория, CORS-ошибок не будет
-            player.load("DEMO.swf");
-        }
-
         function initTooltips(selector, tooltipIdMap) {
             document.querySelectorAll(selector).forEach(el => {
                 const tooltipId = el.getAttribute('data-tooltip') ? 'tooltip-' + el.getAttribute('data-tooltip') : tooltipIdMap[[...el.classList].find(c => tooltipIdMap[c])];
@@ -253,7 +240,7 @@
             'battalion-ref': 'tooltip-battalion', 'fnaf-ref': 'tooltip-fnaf',
             'menu-alpha1-ref': 'tooltip-menu-alpha1', 'gazeta-ref': 'tooltip-gazeta',
             'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-изба',
-            'izba-outside-ref': 'tooltip-izba-outside', 'kalash-ref': 'tooltip-kalash',
+            'izba-outside-ref': 'tooltip-изба-outside', 'kalash-ref': 'tooltip-kalash',
             'symphony-ref': 'tooltip-symphony', 'craylay-ref': 'tooltip-craylay'
         };
 
