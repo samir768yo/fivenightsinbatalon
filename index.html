@@ -4,471 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пять ночей в батальоне</title>
-    <!-- Подключаем Ruffle для запуска SWF-файлов -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
-        /* Сброс отступов и единый шрифт Bookman Old Style для ВСЕХ элементов */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Bookman Old Style', 'Bookman', serif;
-        }
-
-        /* Фоновое изображение bg.png на всю страницу с затемнением 50% */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Bookman Old Style', 'Bookman', serif; }
         body {
             background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('bg.png');
-            background-size: cover;          /* Растягивает на всю страницу */
-            background-position: center;     /* Центрирует изображение */
-            background-repeat: no-repeat;    /* Запрещает повторение картинки */
-            background-attachment: fixed;    /* Фиксирует фон при прокрутке */
-            background-color: #2b2b2b;       /* Запасной темный фон */
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            background-attachment: fixed; background-color: #2b2b2b; min-height: 100vh;
+            display: flex; flex-direction: column; position: relative;
         }
-
-        /* Обертка для шапки и логотипа (фиксируем её намертво вверху при скролле) */
-        .header-wrapper {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: 1000; /* Чтобы шапка всегда была поверх любого контента при прокрутке */
-        }
-
-        /* Шапка: чёрный фон, красная обводка, кнопки по центру */
+        .header-wrapper { position: sticky; top: 0; width: 100%; z-index: 1000; }
         .header-bar {
-            background-color: #000000;
-            border: 2px solid #ff0000;
-            border-top: none; /* Убираем верхнюю границу, чтобы сливалось с краем экрана */
-            padding: 12px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden; /* Чтобы подложка крови не вылезала за границы шапки */
+            background-color: #000000; border: 2px solid #ff0000; border-top: none;
+            padding: 12px 20px; display: flex; flex-direction: column; align-items: center;
+            gap: 8px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); position: relative; overflow: hidden;
         }
-
-        /* Увеличенный стиль для боковых картинок крови в шапке */
-        .header-blood {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            height: 100%;
-            width: 250px; /* Увеличена ширина крови */
-            object-fit: cover;
-            z-index: 1;
-            pointer-events: none; /* Чтобы картинка не перехватывала клики мыши */
-        }
-
-        /* Левая кровь (отражена по горизонтали) */
-        .header-blood-left {
-            left: 0;
-            transform: scaleX(-1);
-        }
-
-        /* Правая кровь (обычная) */
-        .header-blood-right {
-            right: 0;
-        }
-
-        /* Контейнер для кнопок, чтобы они были поверх картинок крови */
-        .nav-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Кнопки меню: чёрный фон, чистый красный текст и обводка */
+        .header-blood { position: absolute; top: 0; bottom: 0; height: 100%; width: 250px; object-fit: cover; z-index: 1; pointer-events: none; }
+        .header-blood-left { left: 0; transform: scaleX(-1); }
+        .header-blood-right { right: 0; }
+        .nav-row { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 2; }
         .nav-btn {
-            background-color: #000000;
-            color: #ff0000;
-            border: 2px solid #ff0000;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: normal;
-            font-size: 14px;
-            transition: background 0.2s, transform 0.1s, font-weight 0.1s, box-shadow 0.2s;
+            background-color: #000000; color: #ff0000; border: 2px solid #ff0000; padding: 8px 20px;
+            border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s;
         }
-
-        /* При наведении курсора и для активной кнопки */
-        .nav-btn:hover, .nav-btn.active {
-            background-color: #000000;
-            color: #ff0000;
-            border-color: #ff0000;
-            font-weight: bold;
-            transform: scale(1.05);
-            box-shadow: 0 0 12px #ff0000;
-        }
-
-        /* SMKS.svg под шапкой у самого левого края с плавным увеличением и красным свечением логотипа */
-        .top-left-link {
-            position: absolute;
-            top: 100%; /* Позиционируем относительно шапки, чтобы всегда вставал сразу под ней */
-            left: 15px; /* Небольшой отступ от самого края для аккуратности */
-            margin-top: 10px; /* Отступ от красной границы шапки */
-            display: inline-block;
-            transition: transform 0.3s ease, filter 0.3s ease; /* Плавность анимации */
-            z-index: 10;
-        }
-
-        .top-left-link:hover {
-            transform: scale(1.05); /* Плавное увеличение */
-            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.9)); /* Красное свечение самого изображения */
-        }
-
-        .top-left-svg {
-            height: 120px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* Блок с логотипом.png и названием игры */
-        .game-title-bar {
-            width: 100%;
-            max-width: 800px;
-            margin: 20px auto 10px auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Картинка логотип.png */
-        .game-logo {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            flex-shrink: 0;
-        }
-
-        /* Лого-текст: #ff0000 со свечением */
-        .game-title-bar h1 {
-            color: #ff0000;
-            font-size: 32px;
-            font-weight: normal;
-            text-shadow: 0 0 34px #ff0000, 
-                         0 0 34px rgba(255, 0, 0, 0.9);
-        }
-
-        /* Центральная область под контент */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 20px 40px 20px;
-        }
-
-        /* Центральное окно: полупрозрачный чёрный фон, красная обводка и свечение (высота по контенту) */
+        .nav-btn:hover, .nav-btn.active { font-weight: bold; transform: scale(1.05); box-shadow: 0 0 12px #ff0000; }
+        .top-left-link { position: absolute; top: 100%; left: 15px; margin-top: 10px; display: inline-block; z-index: 10; transition: 0.3s; }
+        .top-left-link:hover { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.9)); }
+        .top-left-svg { height: 120px; width: auto; display: block; }
+        .game-title-bar { width: 100%; max-width: 800px; margin: 20px auto 10px auto; padding: 0 20px; display: flex; align-items: center; gap: 20px; }
+        .game-logo { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .game-title-bar h1 { color: #ff0000; font-size: 32px; font-weight: normal; text-shadow: 0 0 34px #ff0000; }
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 20px 40px 20px; }
         .content-box {
-            background-color: rgba(0, 0, 0, 0.85);
-            border: 2px solid #ff0000;
-            width: 100%;
-            max-width: 860px;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.85); border: 2px solid #ff0000; width: 100%; max-width: 860px;
+            border-radius: 12px; padding: 40px; box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
         }
-
-        /* Управление переключением вкладок */
-        .tab-content {
-            display: none;
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-content h2 { color: #ff0000; margin-bottom: 10px; font-size: 28px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        .tab-content h3 { color: #ff0000; margin-top: 30px; margin-bottom: 15px; font-size: 20px; }
+        .tab-content p { color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+        #about p, #history p { text-indent: 30px; text-align: justify; }
+        .char-trigger, .interactive-text { font-weight: bold; color: #ffffff; cursor: default; }
+        .inline-game-link, .gamejolt-link { color: #ff0000; text-decoration: none; font-weight: bold; transition: 0.2s; }
+        .inline-game-link:hover, .gamejolt-link:hover { color: #ff3333; text-shadow: 0 0 8px #ff0000; }
+        .download-buttons { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .download-btn, .play-demo-btn, .contact-dev-btn {
+            background-color: #000000; color: #ff0000; border: 2px solid #ff0000; padding: 12px 24px;
+            border-radius: 6px; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-block;
         }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-content h2 {
-            color: #ff0000;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        .tab-content h3 {
-            color: #ff0000;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 20px;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-        }
-
-        /* Белый текст внутри параграфов */
-        .tab-content p {
-            color: #ffffff;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        /* Красная строка и выравнивание для текста внутри разделов "Об игре" и "История создания" */
-        #about p, #history p {
-            text-indent: 30px;
-            text-align: justify;
-        }
-
-        /* Стили для имен персонажей (жирный белый текст без красного цвета) */
-        .char-trigger {
-            font-weight: bold;
-            color: #ffffff;
-            cursor: default;
-        }
-
-        /* Ссылки внутри текста без подчеркивания */
-        .inline-game-link {
-            color: #ff0000;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .inline-game-link:hover {
-            color: #ff3333;
-            text-shadow: 0 0 8px #ff0000;
-        }
-
-        /* Интерактивные триггеры для текста с картинками (жирный белый текст) */
-        .interactive-text {
-            font-weight: bold;
-            color: #ffffff;
-            cursor: default;
-        }
-
-        /* Контейнер для кнопок скачивания */
-        .download-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        /* Кнопки скачивания */
-        .download-btn {
-            display: inline-block;
-            background-color: #000000;
-            color: #ff0000;
-            border: 2px solid #ff0000;
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-        }
-
-        .download-btn:hover {
-            background-color: #000000;
-            color: #ff0000;
-            border-color: #ff0000;
-            transform: scale(1.02);
-            box-shadow: 0 0 14px #ff0000;
-        }
-
-        /* Ссылка на GameJolt без подчеркивания */
-        .gamejolt-link {
-            display: inline-block;
-            color: #ff0000;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .gamejolt-link:hover {
-            color: #ff3333;
-            text-shadow: 0 0 8px #ff0000;
-        }
-
-        /* Кнопка запуска игры внутри контейнера */
-        .play-demo-btn {
-            background-color: #000000;
-            color: #ff0000;
-            border: 2px solid #ff0000;
-            padding: 12px 30px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-        }
-
-        .play-demo-btn:hover {
-            background-color: #000000;
-            color: #ff0000;
-            border-color: #ff0000;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        /* Кнопка связи с разработчиками сразу под чёрным окном по центру */
-        .contact-dev-btn {
-            display: inline-block;
-            background-color: #000000;
-            color: #ff0000;
-            border: 2px solid #ff0000;
-            padding: 12px 28px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 25px;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-        }
-
-        .contact-dev-btn:hover {
-            background-color: #000000;
-            color: #ff0000;
-            border-color: #ff0000;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        /* Стили для SWF-контейнера в пропорции 16/9 */
+        .download-btn:hover, .play-demo-btn:hover, .contact-dev-btn:hover { transform: scale(1.02); box-shadow: 0 0 14px #ff0000; }
+        .play-demo-btn, .contact-dev-btn { border-radius: 20px; }
+        .contact-dev-btn { margin-top: 25px; font-size: 16px; }
         .swf-container {
-            width: 100%;
-            max-width: 800px;
-            aspect-ratio: 16 / 9; /* Задаёт строгое соотношение сторон 16:9 */
-            margin: 20px auto 0 auto;
-            border: 2px solid #ff0000;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: #000000; /* Чёрный фон внутри рамки */
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%; max-width: 800px; aspect-ratio: 16 / 9; margin: 20px auto 0 auto;
+            border: 2px solid #ff0000; border-radius: 8px; overflow: hidden; background-color: #000000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
-
-        .swf-container ruffle-player {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Тёмные всплывающие подсказки для текста */
+        .swf-container ruffle-player { width: 100%; height: 100%; }
         .custom-tooltip {
-            position: fixed;
-            display: none;
-            background-color: #000000;
-            color: #ffffff;
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            max-width: 260px;
-            line-height: 1.4;
-            z-index: 9999;
-            pointer-events: none;
-            box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
-            border: 1px solid #ff0000;
+            position: fixed; display: none; background-color: #000000; color: #ffffff; padding: 10px 14px;
+            border-radius: 6px; font-size: 13px; max-width: 260px; z-index: 9999; pointer-events: none;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.6); border: 1px solid #ff0000;
         }
-
-        /* Тултипы с картинками персонажей, сериала и альфа-элементов */
         .image-tooltip {
-            position: fixed;
-            display: none;
-            background-color: #000000;
-            padding: 6px;
-            border-radius: 8px;
-            z-index: 9999;
-            pointer-events: none;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-            border: 2px solid #ff0000;
+            position: fixed; display: none; background-color: #000000; padding: 6px; border-radius: 8px;
+            z-index: 9999; pointer-events: none; box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); border: 2px solid #ff0000;
         }
-
-        .image-tooltip img {
-            display: block;
-            width: 160px;
-            height: auto;
-            border-radius: 4px;
-        }
-
-        /* Стили для карточек разработчиков в точном соответствии с макетом */
+        .image-tooltip img { display: block; width: 160px; height: auto; border-radius: 4px; }
         .dev-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 30px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid #ff0000;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            position: relative; /* Относительное позиционирование для элементов внутри */
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 30px;
+            background-color: rgba(0, 0, 0, 0.5); border: 1px solid #ff0000; border-radius: 8px;
+            padding: 25px; margin-bottom: 30px; position: relative;
         }
-
-        .dev-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .dev-info p {
-            margin-bottom: 0 !important;
-            text-indent: 0 !important;
-            text-align: left !important;
-            color: #ffffff;
-            font-size: 18px;
-            line-height: 1.5;
-        }
-
-        /* Стили для реального фото разработчика с красной рамкой */
-        .dev-image-box {
-            width: 220px;
-            height: 280px;
-            background-color: #000000;
-            border: 2px solid #ff0000;
-            border-radius: 6px;
-            flex-shrink: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
-        }
-
-        .dev-image-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Стили для фразы в левом нижнем углу второй карточки */
-        .craylay-corner-text {
-            position: absolute;
-            bottom: 20px;
-            left: 25px;
-            color: #ffffff;
-            font-style: italic;
-            font-size: 15px;
-            max-width: 450px;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
-        }
+        .dev-info { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .dev-info p { margin-bottom: 0 !important; text-indent: 0 !important; text-align: left !important; color: #ffffff; font-size: 18px; }
+        .dev-image-box { width: 220px; height: 280px; background-color: #000000; border: 2px solid #ff0000; border-radius: 6px; flex-shrink: 0; overflow: hidden; }
+        .dev-image-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .craylay-corner-text { position: absolute; bottom: 20px; left: 25px; color: #ffffff; font-style: italic; font-size: 15px; max-width: 450px; text-shadow: 0 0 8px rgba(255, 0, 0, 0.6); }
     </style>
 </head>
 <body>
 
-    <!-- Обертка для корректной привязки SMKS.svg прямо под шапкой (position: sticky) -->
     <div class="header-wrapper">
         <header class="header-bar">
-            <!-- Элементы крови по бокам шапки (увеличенная ширина) -->
             <img src="blood.png" alt="" class="header-blood header-blood-left">
             <img src="blood.png" alt="" class="header-blood header-blood-right">
-
             <div class="nav-row">
                 <button class="nav-btn active" onclick="switchTab('about', event)">об игре</button>
                 <button class="nav-btn" onclick="switchTab('download', event)">Скачивание</button>
@@ -479,289 +100,164 @@
                 <button class="nav-btn" onclick="switchTab('developers', event)">Разработчики</button>
             </div>
         </header>
-
-        <!-- Иконка SMKS.svg у самого левого края с кликабельной ссылкой на GameJolt -->
-        <a href="https://gamejolt.com/@SMKSstudios" target="_blank" class="top-left-link" title="Перейти на профиль SMKSstudios в GameJolt">
+        <a href="https://gamejolt.com/@SMKSstudios" target="_blank" class="top-left-link">
             <img src="SMKS.svg" alt="SMKS Logo" class="top-left-svg">
         </a>
     </div>
 
-    <!-- Блок с исходным логотипом.png и названием игры -->
     <div class="game-title-bar">
-        <img src="логотип.png" alt="Логотип игры" class="game-logo">
+        <img src="логотип.png" alt="Логотип" class="game-logo">
         <h1>Пять ночей в батальоне</h1>
     </div>
 
-    <!-- Основное окно с контентом -->
     <main class="main-container">
         <div class="content-box">
             
-            <!-- Раздел 1: Об игре -->
             <div id="about" class="tab-content active">
                 <h2>Об игре</h2>
-                <p>Игра представляет собой мемную пародию на популярную инди-игру <a href="https://store.steampowered.com/app/319510/Five_Nights_at_Freddys/" target="_blank" class="inline-game-link fnaf-ref">«Five Nights at Freddy's»</a>. В игре вам предстоит отбиваться от разных персонажей в роли батальонышей, а именно <span class="char-trigger" data-tooltip="colleague">Коллега</span>, <span class="char-trigger" data-tooltip="commander">Командирша</span>, <span class="char-trigger" data-tooltip="batya">Батя Барбоскин</span>, <span class="char-trigger" data-tooltip="gena">Гена Барбоскин</span> и <span class="char-trigger" data-tooltip="ded">Дед</span> из сериала <a href="https://web.archive.org/web/20150219210059/http://www.batalion-film.ru/about/sub/index.html" target="_blank" class="inline-game-link battalion-ref">«Женский Батальонъ»</a> откуда этот мем и появлился. Механики всех батальонышей довольно простые. Например, чтобы отбиться от <span class="char-trigger" data-tooltip="ded">Деда</span> что у вас будет просить Чекушку, вам надо будет достать свой АКМ и напугать его. К сожалению патронов в нём нету. Или, когда <span class="char-trigger" data-tooltip="colleague">Коллега</span> зайдёт к вам он будет кричать <a href="https://youtu.be/dwxBFAs_BFo?list=PLZEkDBmCflIdpMfnqrwDHKPqRYIa9mQiL&t=330" target="_blank" class="inline-game-link">"ЛОЖИСЬ!", как в одном меме связанным с ним</a>, ну и если вы не ляжете, произойдёт что-то чего даже я не знаю, ибо у него тяжёлая степень ПТСР после двух Чеченских войн. Сразу хочу сказать, что мы вдохновлялись игрой <a href="https://gamejolt.com/games/five-nights-with-froggy/81784" target="_blank" class="inline-game-link">«Пять ночей с Фрогги»</a>, поэтому не удивляйтесь схожести в оформлении.</p>
-
-                <!-- Заголовок "Сюжет" -->
+                <p>Игра представляет собой мемную пародию на инди-игру <a href="https://store.steampowered.com/app/319510/Five_Nights_at_Freddys/" target="_blank" class="inline-game-link fnaf-ref">«Five Nights at Freddy's»</a>. В игре предстоит отбиваться от батальонышей: <span class="char-trigger" data-tooltip="colleague">Коллега</span>, <span class="char-trigger" data-tooltip="commander">Командирша</span>, <span class="char-trigger" data-tooltip="batya">Батя Барбоскин</span>, <span class="char-trigger" data-tooltip="gena">Гена Барбоскин</span> и <span class="char-trigger" data-tooltip="ded">Дед</span> из сериала <a href="https://web.archive.org/web/20150219210059/http://www.batalion-film.ru/about/sub/index.html" target="_blank" class="inline-game-link battalion-ref">«Женский Батальонъ»</a>.</p>
                 <h3>Сюжет</h3>
-                <p>По сюжету игры Главный Герой, Сергей, слушал песню Шамама, и войдя в поток и набрав дозу патриотизма поехал служить в батальонъ из <span class="interactive-text gazeta-ref">объявления</span> в газете. Условия в <span class="interactive-text gazeta-ref">объявлении</span> выглядят невероятно заманчиво: обещано полноценное обучение и абсурдная оплата - «60 минут в час». Серёга соглашается и приезжает на место встречи в армию. Прибыв на местро встерчи, Серый встерчается с охранником и он говорит ему пройти в здание чтобы его приняли в батальонъ. Там Сергей сталкивается с проблемой - В казарме для него нету места. Однако на этот случай у батальона был козырь в рукаве, а именно <span class="interactive-text izba-outside-ref">избушка</span> в глубинах леса, которую они выделяют всем кому места не хватило. В самой игре игроку приходится выживать от батальонышей что его будут терроризировать на протяжении всех 5 ночи.</p>
+                <p>Сергей поехал служить в батальонъ из <span class="interactive-text gazeta-ref">объявления</span> в газете с абсурдной оплатой — «60 минут в час». В казарме места не нашлось, поэтому его поселили в <span class="interactive-text izba-outside-ref">избушку</span> в глубинах леса, где и разворачивается выживание.</p>
             </div>
 
-            <!-- Раздел 2: Скачивание -->
             <div id="download" class="tab-content">
                 <h2>Скачать игру</h2>
-                <p>Выберите версию для загрузки на компьютер:</p>
+                <p>Выберите версию для загрузки:</p>
                 <div class="download-buttons">
-                    <a href="alpha1.zip" id="alpha1-btn" class="download-btn" download="alpha1.zip">Скачать Альфу - 1</a>
-                    <a href="alpha2.zip" id="alpha2-btn" class="download-btn" download="alpha2.zip">Скачать Альфу - 2</a>
+                    <!-- Замени 'v1.0' на актуальную версию твоего релиза на GitHub, если назовешь иначе -->
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/v1.0/alpha1.zip" class="download-btn" download="alpha1.zip">Скачать Альфу - 1</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/v1.0/alpha2.zip" class="download-btn" download="alpha2.zip">Скачать Альфу - 2</a>
                 </div>
-                <!-- Ссылка на GameJolt под кнопками -->
-                <div>
-                    <a href="https://gamejolt.com/games/fivenightsinbatalon/1110884" target="_blank" class="gamejolt-link">Или скачайте на GameJolt</a>
-                </div>
+                <a href="https://gamejolt.com/games/fivenightsinbatalon/1110884" target="_blank" class="gamejolt-link">Или скачайте на GameJolt</a>
             </div>
 
-            <!-- Раздел 3: Демо-версия -->
             <div id="demo" class="tab-content">
                 <h2>DEMO-версия</h2>
-                <p>Здесь вы можете прямо в браузере поиграть в DEMO-версию этой игры</p>
-                
-                <!-- Рамка с соотношением сторон 16/9 -->
+                <p>Поиграйте в DEMO-версию прямо в браузере</p>
                 <div id="swf-container" class="swf-container">
                     <button class="play-demo-btn" onclick="startDemoGame()">Играть</button>
                 </div>
             </div>
 
-            <!-- Раздел 4: История создания -->
             <div id="history" class="tab-content">
                 <h2>История Создания</h2>
-                <p>Игру мы в целом то и не особо планировали, потому что идея к нам пришла вот так: Сидели мы значит в дискорде с друзями и угарали со всяких мемов, наткнувшись на мем <a href="https://www.youtube.com/shorts/3iQnC1g8dVs?t=8&feature=share" target="_blank" class="inline-game-link">«Вон Из Батальона!»</a> <span class="interactive-text craylay-ref">Крейли</span> сказал "А ну ка, Самир, сделай нам игру про этот мем как пародию на Пять ночей во Фредди". Сказал он именно мне потому что я тогда делал игру по Меллстрою. Не ну а я чё, яйца в кулак, <a href="https://ru.wikipedia.org/wiki/Adobe_Animate" target="_blank" class="inline-game-link">Adobe Animate</a> за жопу, и пошёл творить. Первое что у нас получилось, так это <span class="interactive-text menu-alpha1-ref">менюшка что вы можете лицезреть в первой альфе</span>, <span class="interactive-text gazeta-ref">газета</span> которая остаётся такой же и по сей день и <span class="interactive-text palatka-ref">вонючая палатка</span> вместо нынешней <span class="interactive-text izba-ref">избы</span>. Также кнопки были круглым говном и АКМ был <span class="interactive-text kalash-ref">Калашом из стандофф</span> без анимации. Начальнику, то есть <span class="interactive-text craylay-ref">Крейли</span>, такой расклад не понравился, и мы сначала решили изменить оформление, а потом и палатку. Договорились мы на том, что <span class="interactive-text kalash-ref">Калаш из стандоффа</span> будет заглушкой. Мы изменили кнопки на те что вы можете увидеть в первой альфе, то есть похожие на кнопку камер но с другим цветом. Позже мы решили что <span class="interactive-text palatka-ref">палатка</span> будет заменен на <span class="interactive-text izba-ref">избушку</span>, но мы долго не могли найти подходящих изображений <span class="interactive-text izba-ref">избушки</span> изнутри. В итоге мы придумали механику перемещений по комнатам, нашли картинку под первую комнату и вторую, а также сделали так чтобы в первой комнате были камеры, а во второй средства для отбивания от аниматроников. Ещё мы решили заменить <span class="interactive-text kalash-ref">калаш из стандоффа</span> на что нибудь другое, искали мы долго. <span class="interactive-text craylay-ref">Крейли</span> предлагал пистолет, я отказывался, и в итоге мы сошлись на том что <span class="interactive-text kalash-ref">Калаш</span> будет заменен на АКМ <a href="https://youtu.be/28jKnT4KVac?si=yG4uO6GHfy4pGWR" target="_blank" class="inline-game-link">из геймплея страйкбола</a>. Мы придумали механики для обоих батальонышей, то есть <span class="char-trigger" data-tooltip="ded">Деда</span> и <span class="char-trigger" data-tooltip="colleague">Коллеги</span>, даже думать особо не пришлось. Позже мы решили сделать фонгая, которым в будующем оказался охранник из начальной катсцены в альфе 2, кто его должен озвучить долго думать не пришлось, его озвучил <span class="interactive-text craylay-ref">Крейли</span> ибо мой микрофон как с другой планеты, ну и вышло то что вышло. Придумали как оформить красиво субтитры и так появилась первая ночь.</p>
-                
-                <p>В целом про остальные ночи рассказывать смысла особого нету, делали по такому же принципу: придумывали механики у персонажей, писали код для их работы и добавляли всякие рофлы. Так мы выпустили альфу - 1. После этого мы почти сразу начали работу над второй альфой, а именно изменили оформление и в принципе сделали всё покрасивее. Однако мы столкнулись с проблемой в механике <span class="char-trigger" data-tooltip="gena">Гены</span>, что как в первой альфе работала через скиллчек, и мы решили изменить её на механику шкатулки, подобной <a href="https://five-nights-at-freddys.fandom.com/ru/wiki/The_Marionette" target="_blank" class="inline-game-link">марионетке</a>. От себя добавлю, мне понравилось, как <span class="interactive-text craylay-ref">Крейли</span> предложил оформить её и что в итоге получилось — как по мне, в оформлении эта механика выигрывает. Также исправили все баги, например <span class="interactive-text symphony-ref">с симфонией</span> после скримеров. И так выпустили вторую альфу.</p>
+                <p>Идея родилась в дискорде после мема <a href="https://www.youtube.com/shorts/3iQnC1g8dVs?t=8&feature=share" target="_blank" class="inline-game-link">«Вон Из Батальона!»</a>. <span class="interactive-text craylay-ref">Крейли</span> предложил сделать пародию на ФНАФ, так как Самир делал игру по Меллстрою. Использовали <a href="https://ru.wikipedia.org/wiki/Adobe_Animate" target="_blank" class="inline-game-link">Adobe Animate</a>. Сначала была <span class="interactive-text palatka-ref">вонючая палатка</span>, но позже её заменили на <span class="interactive-text izba-ref">избу</span>. Калаш из стандоффа заменили на АКМ <a href="https://youtu.be/28jKnT4KVac?si=yG4uO6GHfy4pGWR" target="_blank" class="inline-game-link">из страйкбола</a>.</p>
             </div>
 
-            <!-- Раздел 5: Разработчики (5 карточек био) -->
             <div id="developers" class="tab-content">
                 <h2>Разработчики</h2>
-                <p style="margin-bottom: 25px;">Здесь вы можете почитать о разработчиках данной игры</p>
-
-                <!-- Разработчик 1 (Самир) -->
                 <div class="dev-card">
                     <div class="dev-info">
                         <p><strong>никнейм:</strong> samir768</p>
-                        <p><strong>роль в разработке:</strong> главный программист</p>
-                        <p><strong>цитаты:</strong> "Жизнь тебя постоянно ебёт, ибо ты забыл стоп-слово"</p>
-                        <p><strong>Короткая биография:</strong> Просто шкильник, который со своими друзьями сделал данную игру. Живёт в Ташкенте.</p>
+                        <p><strong>роль:</strong> главный программист</p>
+                        <p><strong>биография:</strong> Живёт в Ташкенте.</p>
                     </div>
-                    <div class="dev-image-box">
-                        <img src="Samir768.png" alt="Samir768">
-                    </div>
+                    <div class="dev-image-box"><img src="Samir768.png" alt="Samir"></div>
                 </div>
-
-                <!-- Разработчик 2 (Крецли) -->
                 <div class="dev-card">
                     <div class="dev-info">
                         <p><strong>никнейм:</strong> Крецли/Serr_craylay</p>
-                        <p><strong>роль в разработке:</strong> Начальник, дизайнер, сценарист</p>
-                        <p><strong>цитаты:</strong> "Жизнь тебя ебёт потому что у неё на тебя встаёт, потому что ты её нравишся"</p>
-                        <p><strong>Короткая биография:</strong> не фембой в Млечном пути</p>
+                        <p><strong>роль:</strong> Начальник, дизайнер, сценарист</p>
+                        <p><strong>биография:</strong> не фембой в Млечном пути</p>
                     </div>
-                    <div class="dev-image-box">
-                        <img src="craylay.png" alt="craylay">
-                    </div>
-                    <!-- Фраза в левом нижнем углу карточки -->
+                    <div class="dev-image-box"><img src="craylay.png" alt="Craylay"></div>
                     <div class="craylay-corner-text"><em>Ля, квашенная капуста с блинами это реально вкусно</em></div>
                 </div>
-
-                <!-- Разработчик 3 (Kostet) -->
                 <div class="dev-card">
                     <div class="dev-info">
                         <p><strong>никнейм:</strong> Kostet</p>
-                        <p><strong>роль в разработке:</strong> SMM рекламщик</p>
-                        <p><strong>цитаты:</strong></p>
-                        <p><strong>Короткая биография:</strong> Крыса в Кемерово</p>
+                        <p><strong>роль:</strong> SMM рекламщик</p>
+                        <p><strong>биография:</strong> Крыса в Кемерово</p>
                     </div>
-                    <div class="dev-image-box">
-                        <img src="kostet.png" alt="Kostet">
-                    </div>
+                    <div class="dev-image-box"><img src="kostet.png" alt="Kostet"></div>
                 </div>
-
-                <!-- Разработчик 4 (MaoMao) -->
                 <div class="dev-card">
                     <div class="dev-info">
                         <p><strong>никнейм:</strong> MaoMao</p>
-                        <p><strong>роль в разработке:</strong> Идеи придумывал</p>
+                        <p><strong>роль:</strong> Идеи придумывал</p>
                         <p><strong>цитаты:</strong> "-Ты фембой? Это вопрос."</p>
-                        <p><strong>Короткая биография:</strong> Я Маомао. Идиот, еблан, ютубер, витубер, будущий император человечества и собственно, вот такие вот дела. До фембоя я еще не доходил. Но, может быть, скоро дойду</p>
+                        <p><strong>биография:</strong> Я Маомао. Идиот, еблан, ютубер, витубер, будущий император человечества.</p>
                     </div>
-                    <div class="dev-image-box">
-                        <img src="mao.png" alt="MaoMao">
-                    </div>
+                    <div class="dev-image-box"><img src="mao.png" alt="MaoMao"></div>
                 </div>
-
-                <!-- Разработчик 5 (Кулебяка) -->
                 <div class="dev-card">
                     <div class="dev-info">
                         <p><strong>никнейм:</strong> Кулебяка</p>
-                        <p><strong>роль в разработке:</strong> Тестер</p>
+                        <p><strong>роль:</strong> Тестер</p>
                         <p><strong>цитаты:</strong> "Кофе помогает от деменции"</p>
-                        <p><strong>Короткая биография:</strong> 77-ая кулебяка</p>
+                        <p><strong>биография:</strong> 77-ая кулебяка</p>
                     </div>
-                    <div class="dev-image-box">
-                        <img src="Kulebyaka_77.png" alt="Кулебяка">
-                    </div>
+                    <div class="dev-image-box"><img src="Kulebyaka_77.png" alt="Kulebyaka"></div>
                 </div>
-
             </div>
 
         </div>
-
-        <!-- Кнопка связи с разработчиками прямо под чёрным окном по центру -->
         <a href="https://mail.google.com/mail/?view=cm&fs=1&to=samirbby768@gmail.com" target="_blank" class="contact-dev-btn">Связь с разработчиками</a>
     </main>
 
-    <!-- Тёмно-серые окошки-подсказки -->
-    <div id="tooltip-alpha1" class="custom-tooltip">Альфа 1 - ещё сырая версия игры, некоторые механики сломаны, а оформление оставляет желать лучшего</div>
-    <div id="tooltip-alpha2" class="custom-tooltip">Альфа 2 - изменённое оформленное игры и новая механика Гены, мини - игры всё ещё не добавлены</div>
-    <div id="tooltip-symphony" class="custom-tooltip">Симфония - локальный прикол у нас разрабов. Это совмещение всех звуков игры</div>
+    <!-- Тултипы -->
+    <div id="tooltip-alpha1" class="custom-tooltip">Альфа 1 - сырая версия игры</div>
+    <div id="tooltip-alpha2" class="custom-tooltip">Альфа 2 - новая механика Гены</div>
+    <div id="tooltip-symphony" class="custom-tooltip">Симфония звуков</div>
     <div id="tooltip-craylay" class="custom-tooltip">Спаситель всей игры</div>
 
-    <!-- Тултипы с картинками персонажей, сериала, ФНАФ, меню, газеты, палатки, избы и калаша из стандоффа -->
-    <div id="tooltip-colleague" class="image-tooltip"><img src="Коллега.png" alt="Коллега"></div>
-    <div id="tooltip-commander" class="image-tooltip"><img src="Командирша.png" alt="Командирша"></div>
-    <div id="tooltip-batya" class="image-tooltip"><img src="Батя барбоскин.png" alt="Батя барбоскин"></div>
-    <div id="tooltip-gena" class="image-tooltip"><img src="Гена барбоскин.png" alt="Гена барбоскин"></div>
-    <div id="tooltip-ded" class="image-tooltip"><img src="Дед.png" alt="Дед"></div>
-    <div id="tooltip-battalion" class="image-tooltip"><img src="Женский Батальон.jpg" alt="Женский Батальон"></div>
-    <div id="tooltip-fnaf" class="image-tooltip"><img src="Five Nights at Freddy's.jpg" alt="Five Nights at Freddy's"></div>
-    <div id="tooltip-menu-alpha1" class="image-tooltip"><img src="Меню альфа 1.png" alt="Меню альфа 1"></div>
-    <div id="tooltip-gazeta" class="image-tooltip"><img src="газета.png" alt="газета"></div>
-    <div id="tooltip-palatka" class="image-tooltip"><img src="палатка.webp" alt="вонючая палатка"></div>
-    <div id="tooltip-izba" class="image-tooltip"><img src="изба.png" alt="изба"></div>
-    <div id="tooltip-izba-outside" class="image-tooltip"><img src="избушка снаружи.png" alt="избушка снаружи"></div>
-    <div id="tooltip-kalash" class="image-tooltip"><img src="Калаш из стандоффа.png" alt="Калаш из стандоффа"></div>
+    <div id="tooltip-colleague" class="image-tooltip"><img src="Коллега.png" alt=""></div>
+    <div id="tooltip-commander" class="image-tooltip"><img src="Командирша.png" alt=""></div>
+    <div id="tooltip-batya" class="image-tooltip"><img src="Батя барбоскин.png" alt=""></div>
+    <div id="tooltip-gena" class="image-tooltip"><img src="Гена барбоскин.png" alt=""></div>
+    <div id="tooltip-ded" class="image-tooltip"><img src="Дед.png" alt=""></div>
+    <div id="tooltip-battalion" class="image-tooltip"><img src="Женский Батальон.jpg" alt=""></div>
+    <div id="tooltip-fnaf" class="image-tooltip"><img src="Five Nights at Freddy's.jpg" alt=""></div>
+    <div id="tooltip-menu-alpha1" class="image-tooltip"><img src="Меню альфа 1.png" alt=""></div>
+    <div id="tooltip-gazeta" class="image-tooltip"><img src="газета.png" alt=""></div>
+    <div id="tooltip-palatka" class="image-tooltip"><img src="палатка.webp" alt=""></div>
+    <div id="tooltip-izba" class="image-tooltip"><img src="изба.png" alt=""></div>
+    <div id="tooltip-izba-outside" class="image-tooltip"><img src="избушка снаружи.png" alt=""></div>
+    <div id="tooltip-kalash" class="image-tooltip"><img src="Калаш из стандоффа.png" alt=""></div>
 
-    <!-- Скрипты переключения вкладок и логики подсказок -->
     <script>
         function switchTab(tabId, event) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        /* Функция запуска демо-игры по клику на кнопку внутри рамки (в размерах 16:9) */
         function startDemoGame() {
-            const swfContainer = document.getElementById('swf-container');
-
-            swfContainer.innerHTML = `
-                <object width="100%" height="100%" data="DEMO.swf" type="application/x-shockwave-flash">
-                    <param name="movie" value="DEMO.swf">
+            const demoUrl = "https://github.com/samir768yo/fivenightsinbatalon/releases/download/v1.0/DEMO.swf";
+            document.getElementById('swf-container').innerHTML = `
+                <object width="100%" height="100%" data="${demoUrl}" type="application/x-shockwave-flash">
+                    <param name="movie" value="${demoUrl}">
                     <param name="allowScriptAccess" value="always">
-                    <p style="color: white; text-align: center; padding: 20px;">Ваш браузер не поддерживает Flash-контент, либо Ruffle не смог загрузиться.</p>
                 </object>
             `;
         }
 
-        /* Функция связывания текстовой кнопки/слова с тултипом */
-        function bindTooltip(buttonId, tooltipId) {
-            const btn = document.getElementById(buttonId);
-            const tooltip = document.getElementById(tooltipId);
-
-            if (!btn || !tooltip) return;
-
-            btn.addEventListener('mouseenter', () => {
-                tooltip.style.display = 'block';
-            });
-
-            btn.addEventListener('mousemove', (e) => {
-                const offsetX = 15;
-                const offsetY = 15;
-                tooltip.style.left = (e.clientX + offsetX) + 'px';
-                tooltip.style.top = (e.clientY + offsetY) + 'px';
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                tooltip.style.display = 'none';
-            });
-        }
-
-        /* Универсальная функция для тултипов персонажей с изображениями */
-        function initCharacterTooltips() {
-            const triggers = document.querySelectorAll('.char-trigger');
-            
-            triggers.forEach(trigger => {
-                const tooltipType = trigger.getAttribute('data-tooltip');
-                let tooltipId = '';
-
-                if (tooltipType === 'colleague') tooltipId = 'tooltip-colleague';
-                else if (tooltipType === 'commander') tooltipId = 'tooltip-commander';
-                else if (tooltipType === 'batya') tooltipId = 'tooltip-batya';
-                else if (tooltipType === 'gena') tooltipId = 'tooltip-gena';
-                else if (tooltipType === 'ded') tooltipId = 'tooltip-ded';
-
+        function initTooltips(selector, tooltipIdMap) {
+            document.querySelectorAll(selector).forEach(el => {
+                const tooltipId = el.getAttribute('data-tooltip') ? 'tooltip-' + el.getAttribute('data-tooltip') : tooltipIdMap[[...el.classList].find(c => tooltipIdMap[c])];
                 const tooltip = document.getElementById(tooltipId);
                 if (!tooltip) return;
 
-                trigger.addEventListener('mouseenter', () => {
-                    tooltip.style.display = 'block';
+                el.addEventListener('mouseenter', () => tooltip.style.display = 'block');
+                el.addEventListener('mousemove', e => {
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
                 });
-
-                trigger.addEventListener('mousemove', (e) => {
-                    const offsetX = 15;
-                    const offsetY = 15;
-                    tooltip.style.left = (e.clientX + offsetX) + 'px';
-                    tooltip.style.top = (e.clientY + offsetY) + 'px';
-                });
-
-                trigger.addEventListener('mouseleave', () => {
-                    tooltip.style.display = 'none';
-                });
+                el.addEventListener('mouseleave', () => tooltip.style.display = 'none');
             });
         }
 
-        /* Универсальный хелпер для группы элементов по классу с привязкой к тултипу */
-        function bindClassTooltips(className, tooltipId) {
-            const elements = document.querySelectorAll('.' + className);
-            const tooltip = document.getElementById(tooltipId);
+        const classMap = {
+            'battalion-ref': 'tooltip-battalion', 'fnaf-ref': 'tooltip-fnaf',
+            'menu-alpha1-ref': 'tooltip-menu-alpha1', 'gazeta-ref': 'tooltip-gazeta',
+            'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-izба',
+            'izba-outside-ref': 'tooltip-izba-outside', 'kalash-ref': 'tooltip-kalash',
+            'symphony-ref': 'tooltip-symphony', 'craylay-ref': 'tooltip-craylay'
+        };
 
-            if (!elements.length || !tooltip) return;
-
-            elements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    tooltip.style.display = 'block';
-                });
-
-                el.addEventListener('mousemove', (e) => {
-                    const offsetX = 15;
-                    const offsetY = 15;
-                    tooltip.style.left = (e.clientX + offsetX) + 'px';
-                    tooltip.style.top = (e.clientY + offsetY) + 'px';
-                });
-
-                el.addEventListener('mouseleave', () => {
-                    tooltip.style.display = 'none';
-                });
-            });
-        }
-
-        bindTooltip('alpha1-btn', 'tooltip-alpha1');
-        bindTooltip('alpha2-btn', 'tooltip-alpha2');
-        initCharacterTooltips();
-        
-        bindClassTooltips('battalion-ref', 'tooltip-battalion');
-        bindClassTooltips('fnaf-ref', 'tooltip-fnaf');
-        bindClassTooltips('menu-alpha1-ref', 'tooltip-menu-alpha1');
-        bindClassTooltips('gazeta-ref', 'tooltip-gazeta');
-        bindClassTooltips('palatka-ref', 'tooltip-palatka');
-        bindClassTooltips('izba-ref', 'tooltip-izba');
-        bindClassTooltips('izba-outside-ref', 'tooltip-izba-outside');
-        bindClassTooltips('kalash-ref', 'tooltip-kalash');
-        bindClassTooltips('symphony-ref', 'tooltip-symphony');
-        bindClassTooltips('craylay-ref', 'tooltip-craylay');
+        initTooltips('.char-trigger', {});
+        initTooltips('.inline-game-link, .interactive-text', classMap);
     </script>
 </body>
 </html>
