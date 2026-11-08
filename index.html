@@ -281,16 +281,43 @@
             }
         }
 
-        function startDemoGame() {
+        async function startDemoGame() {
     const swfContainer = document.getElementById('swf-container');
-    swfContainer.innerHTML = '';
+    swfContainer.innerHTML = '<p style="color: white; text-align: center;">Загрузка и сборка DEMO (89 МБ)...</p>';
 
-    const ruffle = window.RufflePlayer.newest();
-    const player = ruffle.createPlayer();
-    swfContainer.appendChild(player);
+    try {
+        // Перечисляем части файла (укажи точные имена твоих частей)
+        const parts = ['DEMO.z01', 'DEMO.z02', 'DEMO.z03', 'DEMO.z04'];
+        
+        // Скачиваем все куски параллельно
+        const responses = await Promise.all(parts.map(file => fetch(file).then(r => r.arrayBuffer())));
+        
+        // Считаем общий размер
+        const totalLength = responses.reduce((acc, buf) => acc + buf.byteLength, 0);
+        const combinedArray = new Uint8Array(totalLength);
+        
+        // Склеиваем байты в один массив
+        let offset = 0;
+        for (const buf of responses) {
+            combinedArray.set(new Uint8Array(buf), offset);
+            offset += buf.byteLength;
+        }
 
-    // Вставьте сюда прямую ссылку из GitHub Releases вместо локального файла
-    player.load("https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/DEMO.swf");
+        // Создаем Blob-объект и ссылку на него
+        const blob = new Blob([combinedArray], { type: 'application/x-shockwave-flash' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Запускаем Ruffle
+        swfContainer.innerHTML = '';
+        const ruffle = window.RufflePlayer.newest();
+        const player = ruffle.createPlayer();
+        swfContainer.appendChild(player);
+        
+        player.load(blobUrl);
+    } catch (err) {
+        console.error(err);
+        swfContainer.innerHTML = '<p style="color: red; text-align: center;">Ошибка при загрузке частей файла.</p>';
+    }
 }
 
         function initTooltips(selector, tooltipIdMap) {
