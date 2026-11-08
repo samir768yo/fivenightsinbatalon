@@ -282,16 +282,16 @@
         }
 
         function startDemoGame() {
-            const swfContainer = document.getElementById('swf-container');
-            swfContainer.innerHTML = '';
+    const swfContainer = document.getElementById('swf-container');
+    swfContainer.innerHTML = '';
 
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            swfContainer.appendChild(player);
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    swfContainer.appendChild(player);
 
-            // Загружаем локальный файл из корня сайта — как на Newgrounds, без CORS
-            player.load("DEMO.swf");
-        }
+    // Указываем прямую ссылку на файл из GitHub Releases
+    player.load("https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/DEMO.swf");
+}
 
         function initTooltips(selector, tooltipIdMap) {
             document.querySelectorAll(selector).forEach(el => {
