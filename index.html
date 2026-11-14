@@ -6,18 +6,15 @@
     <title>Пять ночей в батальоне</title>
     <!-- Конфигурация Ruffle для защиты от падений и стабильного рендеринга -->
     <script>
+        <script>
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
-            letterbox: "on",
+            preferredRenderer: "canvas", // Самый стабильный рендерер без падений WebGL в Fullscreen
             unmuteOverlay: "hidden",
-            allowScriptAccess: true,
-            // Защита от зависаний скриптов ActionScript
-            maxExecutionDuration: 15, 
-            // Отключение аппаратных ограничений, вызывающих краш при смене кадров
-            forceScale: true,
-            wmode: "direct"
+            letterbox: "on"
         };
     </script>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <!-- Официальная библиотека Ruffle -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
