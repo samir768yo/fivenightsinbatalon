@@ -302,6 +302,11 @@
                 swfContainer.appendChild(player);
                 player.load("DEMO.swf");
                 isGameRunning = true;
+
+                // Даем плееру фокус, чтобы Ruffle стабильно рендерил кадры
+                setTimeout(() => {
+                    player.focus();
+                }, 300);
             } else {
                 swfContainer.innerHTML = '<p style="color: red; text-align: center;">Не удалось инициализировать эмулятор Ruffle.</p>';
                 isGameRunning = false;
