@@ -88,7 +88,7 @@
             border: 2px solid #ff0000; border-radius: 8px; overflow: hidden; background-color: #000000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
-        .swf-container ruffle-player { width: 100%; height: 100%; }
+        .swf-container ruffle-player, .swf-container object, .swf-container embed { width: 100%; height: 100%; }
         .demo-loading-text {
             color: #ffffff;
             text-align: center;
@@ -281,44 +281,20 @@
             }
         }
 
-        async function startDemoGame() {
-    const swfContainer = document.getElementById('swf-container');
-    swfContainer.innerHTML = '<p style="color: white; text-align: center;">Загрузка и сборка DEMO (89 МБ)...</p>';
+        function startDemoGame() {
+            const swfContainer = document.getElementById('swf-container');
+            swfContainer.innerHTML = '<p style="color: white; text-align: center;">Загрузка DEMO-версии...</p>';
 
-    try {
-        // Перечисляем части файла (укажи точные имена твоих частей)
-        const parts = ['DEMO.z01', 'DEMO.z02', 'DEMO.z03', 'DEMO.z04'];
-        
-        // Скачиваем все куски параллельно
-        const responses = await Promise.all(parts.map(file => fetch(file).then(r => r.arrayBuffer())));
-        
-        // Считаем общий размер
-        const totalLength = responses.reduce((acc, buf) => acc + buf.byteLength, 0);
-        const combinedArray = new Uint8Array(totalLength);
-        
-        // Склеиваем байты в один массив
-        let offset = 0;
-        for (const buf of responses) {
-            combinedArray.set(new Uint8Array(buf), offset);
-            offset += buf.byteLength;
+            if (window.RufflePlayer) {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                swfContainer.innerHTML = '';
+                swfContainer.appendChild(player);
+                player.load("DEMO.swf");
+            } else {
+                swfContainer.innerHTML = '<p style="color: red; text-align: center;">Не удалось инициализировать эмулятор Ruffle.</p>';
+            }
         }
-
-        // Создаем Blob-объект и ссылку на него
-        const blob = new Blob([combinedArray], { type: 'application/x-shockwave-flash' });
-        const blobUrl = URL.createObjectURL(blob);
-
-        // Запускаем Ruffle
-        swfContainer.innerHTML = '';
-        const ruffle = window.RufflePlayer.newest();
-        const player = ruffle.createPlayer();
-        swfContainer.appendChild(player);
-        
-        player.load(blobUrl);
-    } catch (err) {
-        console.error(err);
-        swfContainer.innerHTML = '<p style="color: red; text-align: center;">Ошибка при загрузке частей файла.</p>';
-    }
-}
 
         function initTooltips(selector, tooltipIdMap) {
             document.querySelectorAll(selector).forEach(el => {
