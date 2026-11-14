@@ -33,7 +33,6 @@
         .top-left-link:hover { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.9)); }
         .top-left-svg { height: 120px; width: auto; display: block; }
         
-        /* Стили для красного переключателя в углу шапки */
         .header-toggle-container {
             position: absolute; right: 20px; top: 12px;
             display: flex; align-items: center; gap: 8px; z-index: 100;
@@ -83,20 +82,13 @@
         .download-btn:hover, .play-demo-btn:hover, .contact-dev-btn:hover { transform: scale(1.02); box-shadow: 0 0 14px #ff0000; }
         .play-demo-btn, .contact-dev-btn { border-radius: 20px; }
         .contact-dev-btn { margin-top: 25px; font-size: 16px; }
+        
         .swf-container {
             width: 100%; max-width: 800px; aspect-ratio: 16 / 9; margin: 20px auto 0 auto;
-            border: 2px solid #ff0000; border-radius: 8px; overflow: hidden; background-color: #000000;
+            border: 2px solid #ff0000; border-radius: 8px; overflow: visible; background-color: #000000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
         .swf-container ruffle-player, .swf-container object, .swf-container embed { width: 100%; height: 100%; }
-        .demo-loading-text {
-            color: #ffffff;
-            text-align: center;
-            margin-top: 12px;
-            font-size: 15px;
-            font-weight: bold;
-            font-style: italic;
-        }
         .custom-tooltip {
             position: fixed; display: none; background-color: #000000; color: #ffffff; padding: 10px 14px;
             border-radius: 6px; font-size: 13px; max-width: 260px; z-index: 9999; pointer-events: none;
@@ -126,7 +118,6 @@
             <img src="blood.jpg" alt="" class="header-blood header-blood-left">
             <img src="blood.jpg" alt="" class="header-blood header-blood-right">
             
-            <!-- Переключатель логотипа в правом верхнем углу шапки -->
             <div class="header-toggle-container">
                 <span>SMKS</span>
                 <label class="switch">
@@ -169,9 +160,9 @@
                 <h2>Скачать игру</h2>
                 <p>Выберите версию для загрузки:</p>
                 <div class="download-buttons">
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/alpha2.zip" class="download-btn" download>Скачать Альфу - 2</a>
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/alpha1.zip" class="download-btn" download>Скачать Альфу - 1</a>
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/pre-alpha.zip" class="download-btn pre-alpha-link" data-tooltip="pre-alpha" download>Скачать Пре - Альфу</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/alpha2.zip" class="download-btn" download>Скачать Альфу - 2</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/alpha1.zip" class="download-btn" download>Скачать Альфу - 1</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/pre-alpha.zip" class="download-btn pre-alpha-link" data-tooltip="pre-alpha" download>Скачать Пре - Альфу</a>
                 </div>
                 <a href="https://gamejolt.com/games/fivenightsinbatalon/1110884" target="_blank" class="gamejolt-link">Или скачайте на GameJolt</a>
             </div>
@@ -182,12 +173,11 @@
                 <div id="swf-container" class="swf-container">
                     <button class="play-demo-btn" onclick="startDemoGame()">Играть</button>
                 </div>
-                <p class="demo-loading-text"><em>Извиняемся если загрузка будет идти долго</em></p>
             </div>
 
             <div id="history" class="tab-content">
                 <h2>История Создания</h2>
-                <p>Игру мы в целом то и не особо планировали, потому что идея к нам пришла вот так: Сидели мы значит в дискорде с друзями и угарали со всяких мемов, наткнувшись на мем <a href="https://www.youtube.com/shorts/3iQnC1g8dVs?t=8&feature=share" target="_blank" class="inline-game-link">«Вон Из Батальона!»</a> <span class="interactive-text craylay-ref">Крейли</span> сказал "А ну ка, Самир, сделай нам игру про этот мем как пародию на Пять Ночей во Фредди". Сказал он именно мне потому что я тогда делал игру по Меллстрою. Не ну а я чё, яйца в кулак, <a href="https://ru.wikipedia.org/wiki/Adobe_Animate" target="_blank" class="inline-game-link">Adobe Animate</a> за жопу, и пошёл творить. Первое что у нас получилось, так это <span class="interactive-text menu-alpha1-ref">менюшка</span> что вы можете лицезреть в первой альфе, <span class="interactive-text gazeta-ref">газета</span> которая остаётся такой же и по сей день и <span class="interactive-text palatka-ref">вонючая палатка</span> вместо нынешней избы. Также кнопки были круглым говном и АКМ был <span class="interactive-text kalash-ref">Калашом из стандофф</span> без анимации. Начальнику, то есть Крейли, такой расклад не понравился, и мы сначала решили изменить оформление, а потом и палатку. Договорились мы на том, что Калаш из стандоффа будет заглушкой. Мы изменили кнопки на те что вы можете увидеть в первой альфе, то есть похожие на кнопку камер но с другим цветом. Позже мы решили что палатка будет заменена на <span class="interactive-text izba-ref">избушку</span>, но мы долго не могли найти подходящих изображений избушки изнутри. В итоге мы придумали механику перемещений по комнатам, нашли картинку под первую комнату и вторую, а также сделали так чтобы в первой комнате были камеры, а во второй средства для отбивания от аниматроников. Ещё мы решили заменить калаш из стандоффа на что нибудь другое, искали мы долго. Крейли предлагал пистолет, я отказывался, и в итоге мы сошлись на том что Калаш будет заменён на АКМ <a href="https://youtu.be/28jKnT4KVac?si=yG4uO6GHfy4pGWR" target="_blank" class="inline-game-link">из геймплея страйкбола</a>. Мы придумали механики для обоих батальонышей, то есть <span class="char-trigger" data-tooltip="ded">Деда</span> и <span class="char-trigger" data-tooltip="colleague">Коллеги</span>, даже думать особо не пришлось. Позже мы решили сделать фонгая, которым в будующем оказался охранник из начальной катсцены в альфе 2, кто его должен озвучить долго думать не пришлось, его озвучил Крейли ибо мой микрофон как с другой планеты, ну и вышло то что вышло. Придумали как оформить красиво субтитры и так появилась первая ночь.</p>
+                <p>Игру мы в целом то и не особо планировали, потому что идея к нам пришла вот так: Сидели мы значит в дискорде с друзями и угарали со всяких мемов, наткнувшись на мем <a href="https://www.youtube.com/shorts/3iQnC1g8dVs?t=8&feature=share" target="_blank" class="inline-game-link">«Вон Из Батальона!»</a> <span class="interactive-text craylay-ref">Крейли</span> сказал "А ну ка, Самир, сделай нам игру про этот мем как пародию на Пять Ночей во Фредди". Сказал он именно мне потому что я тогда делал игру по Меллстрою. Не ну а я чё, яйца в кулак, <a href="https://ru.wikipedia.org/wiki/Adobe_Animate" target="_blank" class="inline-game-link">Adobe Animate</a> за жопу, и пошёл творить. Первое что у нас получилось, так это <span class="interactive-text menu-alpha1-ref">менюшка</span> что вы можете лицезреть в первой альфе, <span class="interactive-text gazeta-ref">газета</span> которая остаётся такой же и по сей день и <span class="interactive-text palatka-ref">вонючая палатка</span> вместо нынешней избы. Также кнопки были круглым говном и АКМ был <span class="interactive-text kalash-ref">Калашом из стандофф</span> без анимации. Начальнику, то есть Крейли, такой расклад не понравился, и мы сначала решили изменить оформление, а потом и палатку. Договорились мы на том, что Калаш из стандоффа будет заглушкой. Мы изменили кнопки на те что вы можете увидеть в первой альфе, то есть похожие на кнопку камер но с другим цветом. Позже мы решили что палатка будет заменена на <span class="interactive-text izba-ref">избушку</span>, но мы долго не могли найти подходящих изображений избушки изнутри. В итоге мы придумали механику перемещений по комнатам, нашли картинку под первую комнату и вторую, а также сделали так чтобы в первой комнате были камеры, а во второй средства для отбивания от аниматроников. Ещё мы решили заменить калаш из стандоффа на что нибудь другое, искали мы долго. Крейли предлагал пистолет, я отказывался, и в итоге мы сошлись на том что Калаш будет заменен на АКМ <a href="https://youtu.be/28jKnT4KVac?si=yG4uO6GHfy4pGWR" target="_blank" class="inline-game-link">из геймплея страйкбола</a>. Мы придумали механики для обоих батальонышей, то есть <span class="char-trigger" data-tooltip="ded">Деда</span> и <span class="char-trigger" data-tooltip="colleague">Коллеги</span>, даже думать особо не пришлось. Позже мы решили сделать фонгая, которым в будующем оказался охранник из начальной катсцены в альфе 2, кто его должен озвучить долго думать не пришлось, его озвучил Крейли ибо мой микрофон как с другой планеты, ну и вышло то что вышло. Придумали как оформить красиво субтитры и так появилась первая ночь.</p>
                 <p>В целом про остальные ночи рассказывать смысла особого нету, делали по такому же принципу: Придумывали механики у персонажей, писали код для их работу, и в добавляли всякие рофлы. Так мы выпустили альфу - 1. После этого мы почти сразу начали работу над второй альфой, а именно изменили оформление и в принципе сделали всё покрасивее. Однако мы столкнулись с проблемой в механике <span class="char-trigger" data-tooltip="gena">Гены</span>, что как в первой альфе работала через скиллчек, и мы решили изменить её на механику шкатулки подобной марионетки. От себя добавлю, мне понравилось как Крейли предложил оформить её и что в итоге получилось, как по мне в оформлении эта механика выигрывает. Также исправили все баги, например с <span class="interactive-text symphony-ref">симфонией</span> после скримеров. И так выпустили вторую альфу.</p>
             </div>
 
@@ -264,12 +254,32 @@
     <div id="tooltip-kalash" class="image-tooltip"><img src="Калаш из стандоффа.png" alt=""></div>
 
     <script>
+        let currentPlayer = null;
+
+        function updateGameVolume() {
+            if (!currentPlayer) return;
+            const isDemoActive = document.getElementById('demo').classList.contains('active');
+            const isTabVisible = !document.hidden;
+
+            if (isDemoActive && isTabVisible) {
+                currentPlayer.volume = 1.0; // Возвращаем полную громкость (100%)
+            } else {
+                currentPlayer.volume = 0.0; // Выключаем звук (0)
+            }
+        }
+
         function switchTab(tabId, event) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+
+            // Проверяем громкость при переключении разделов сайта
+            updateGameVolume();
         }
+
+        // Отслеживаем переключение вкладок браузера
+        document.addEventListener('visibilitychange', updateGameVolume);
 
         function toggleLogo() {
             const logoLink = document.getElementById('smksLogoLink');
@@ -287,10 +297,10 @@
 
             if (window.RufflePlayer) {
                 const ruffle = window.RufflePlayer.newest();
-                const player = ruffle.createPlayer();
+                currentPlayer = ruffle.createPlayer();
                 swfContainer.innerHTML = '';
-                swfContainer.appendChild(player);
-                player.load("DEMO.swf");
+                swfContainer.appendChild(currentPlayer);
+                currentPlayer.load("DEMO.swf");
             } else {
                 swfContainer.innerHTML = '<p style="color: red; text-align: center;">Не удалось инициализировать эмулятор Ruffle.</p>';
             }
