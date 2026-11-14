@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пять ночей в батальоне</title>
+    <!-- Конфигурация Ruffle для мгновенного рендеринга кадров без задержек -->
+    <script>
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.RufflePlayer.config = {
+            letterbox: "on",
+            unmuteOverlay: "hidden",
+            allowScriptAccess: true,
+            // Принудительно отключаем сглаживание тяжелых эффектов ради скорости
+            quality: "medium" 
+        };
+    </script>
     <!-- Официальная библиотека Ruffle -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
