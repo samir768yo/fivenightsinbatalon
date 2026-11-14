@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пять ночей в батальоне</title>
-    <!-- Конфигурация Ruffle для защиты от падений и стабильного рендеринга -->
+    <!-- Конфигурация Ruffle для стабильного рендеринга без крашей -->
     <script>
-        <script>
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
-            preferredRenderer: "canvas", // Самый стабильный рендерер без падений WebGL в Fullscreen
+            preferredRenderer: "canvas",
+            letterbox: "on",
             unmuteOverlay: "hidden",
-            letterbox: "on"
+            allowScriptAccess: true
         };
     </script>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <!-- Официальная библиотека Ruffle -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
@@ -99,16 +98,16 @@
             border: 2px solid #ff0000; border-radius: 8px; overflow: visible; background-color: #000000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
+        .swf-container ruffle-player { width: 100%; height: 100%; display: block; }
         
-        /* Возвращаем нормальное заполнение без перекрытия кликов */
-        .swf-container ruffle-player {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        
-        #swf-container {
-            position: relative; /* Нужно для корректного абсолютного позиционирования плеера */
+        /* Стили для надписи под игрой */
+        .demo-recommendation {
+            color: #ffffff;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
         }
 
         .custom-tooltip {
@@ -195,6 +194,7 @@
                 <div id="swf-container" class="swf-container">
                     <button class="play-demo-btn" onclick="startDemoGame()">Играть</button>
                 </div>
+                <p class="demo-recommendation">Рекомендуется играть в оконном режиме</p>
             </div>
 
             <div id="history" class="tab-content">
@@ -303,11 +303,6 @@
                 swfContainer.innerHTML = '';
                 swfContainer.appendChild(player);
                 player.load("DEMO.swf");
-
-                // Принудительный фокус для стабильного рендеринга в полноэкранном режиме
-                setTimeout(() => {
-                    player.focus();
-                }, 300);
             } else {
                 swfContainer.innerHTML = '<p style="color: red; text-align: center;">Не удалось инициализировать эмулятор Ruffle.</p>';
             }
