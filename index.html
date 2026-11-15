@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пять ночей в батальоне</title>
-    <meta name="description" content="Официальный сайт игры «Пять ночей в батальоне» - мемной пародии на FNaF от SMKS Studios. Скачать игру, почитать историю создания и поиграть в DEMO-версию прямо в браузере.">
-    <meta name="google-site-verification" content="ZRWEk6Kqr0rmjpoB-dsZsDiyw37bcB26kZR4cE-njyY" />
+    <meta name="description" content="Официальный сайт игры «Пять ночей в батальоне» — мемной пародии на FNaF от SMKS Studios. Скачать игру, почитать историю создания и поиграть в DEMO-версию прямо в браузере.">
     <!-- Конфигурация Ruffle для стабильного рендеринга без крашей -->
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
@@ -82,7 +81,7 @@
         .tab-content h2 { color: #ff0000; margin-bottom: 10px; font-size: 28px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
         .tab-content h3 { color: #ff0000; margin-top: 30px; margin-bottom: 15px; font-size: 20px; }
         .tab-content p { color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
-        #about p, #history p { text-indent: 30px; text-align: justify; }
+        #about p:not(.no-indent), #history p { text-indent: 30px; text-align: justify; }
         .char-trigger, .interactive-text { font-weight: bold; color: #ffffff; cursor: default; }
         .inline-game-link, .gamejolt-link { color: #ff0000; text-decoration: none; font-weight: bold; transition: 0.2s; }
         .inline-game-link:hover, .gamejolt-link:hover { color: #ff3333; text-shadow: 0 0 8px #ff0000; }
@@ -97,10 +96,10 @@
         
         .swf-container {
             width: 100%; max-width: 800px; aspect-ratio: 16 / 9; margin: 20px auto 0 auto;
-            border: 2px solid #ff0000; border-radius: 8px; overflow: visible; background-color: #000000;
+            border: 2px solid #ff0000; border-radius: 8px; overflow: hidden; background-color: #000000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
         }
-        .swf-container ruffle-player { width: 100%; height: 100%; display: block; }
+        .swf-container ruffle-player, .swf-container video { width: 100%; height: 100%; display: block; outline: none; }
         
         /* Стили для надписи под игрой */
         .demo-recommendation {
@@ -177,6 +176,11 @@
                 <p>Игра представляет собой мемную пародию на популярную инди-игру <a href="https://store.steampowered.com/app/319510/Five_Nights_at_Freddys/" target="_blank" class="inline-game-link fnaf-ref">«Five Nights at Freddy's»</a>. В игре вам предстоит отбиваться от разных персонажей, а именно <span class="char-trigger" data-tooltip="colleague">Коллега</span>, <span class="char-trigger" data-tooltip="commander">Командирша</span>, <span class="char-trigger" data-tooltip="batya">Батя Барбоскин</span>, <span class="char-trigger" data-tooltip="gena">Гена Барбоскин</span> и <span class="char-trigger" data-tooltip="ded">Дед</span> из сериала <a href="https://web.archive.org/web/20150219210059/http://www.batalion-film.ru/about/sub/index.html" target="_blank" class="inline-game-link battalion-ref">«Женский Батальонъ»</a> откуда этот мем и появлился. Механики всех батальонышей довольно простые. Например, чтобы отбиться от Деда что у вас будет просить Чекушку, вам надо будет достать свой АКМ и напугать его. К сожалению патронов в нём нету. Или, когда Коллега зайдёт к вам он будет кричать <a href="https://youtu.be/dwxBFAs_BFo?list=PLZEkDBmCflIdpMfnqrwDHKPqRYIa9mQiL&t=330" target="_blank" class="inline-game-link">"ЛОЖИСЬ!"</a>, как в одном меме связанным с ним, ну и если вы не ляжете, произойдёт что-то чего даже я не знаю, ибо у него тяжёлая степень ПТСР после двух Чеченских войн. Сразу хочу сказать, что мы вдохновлялись игрой «Пять ночей с Фрогги», поэтому не удивляйтесь схожести в оформлении.</p>
                 <h3>Сюжет</h3>
                 <p>По сюжету игры Главный Герой, Сергей, слушал песню Шамана, и войдя в поток и набрав дозу патриотизма поехал служить в батальонъ из <span class="interactive-text gazeta-ref">объявления в газете</span>. Условия в объявлении выглядят невероятно заманчиво: обещано полноценное обучение и абсурдная оплата - «60 минут в час». Серёга соглашается и приезжает на место встречи в армию. Прибыв на местро встерчи, Серый встерчается с охранником и он говорит ему пройти в здание чтобы его приняли в батальонъ. Там Сергей сталкивается с проблемой - В казарме для него нету места. Однако на этот случай у батальона был козырь в рукаве, а именно <span class="interactive-text izba-outside-ref">избушка</span> в глубинах леса, которую они выделяют всем кому места не хватило. В самой игре игроку приходится выживать от батальонышей что его будут терроризировать на протяжении всех 5 ночи.</p>
+
+                <!-- Рамка с трейлером в самом низу раздела "Об игре" -->
+                <div id="trailer-container" class="swf-container">
+                    <button class="play-demo-btn" onclick="startTrailer()">Трейлер</button>
+                </div>
             </div>
 
             <div id="download" class="tab-content">
@@ -283,6 +287,14 @@
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+
+            // Ставим трейлер на паузу при уходе со вкладки "об игре"
+            if (tabId !== 'about') {
+                const trailerVideo = document.getElementById('trailer-video');
+                if (trailerVideo && !trailerVideo.paused) {
+                    trailerVideo.pause();
+                }
+            }
         }
 
         function toggleLogo() {
@@ -293,6 +305,56 @@
             } else {
                 logoLink.style.display = 'none';
             }
+        }
+
+        function startTrailer() {
+            const trailerContainer = document.getElementById('trailer-container');
+            trailerContainer.innerHTML = '<video id="trailer-video" controls autoplay style="width: 100%; height: 100%; object-fit: contain; background: #000;"><source src="Трейлер.mp4" type="video/mp4">Ваш браузер не поддерживает воспроизведение видео.</video>';
+
+            const video = document.getElementById('trailer-video');
+
+            // Переменная для отслеживания наведения мыши именно на видео
+            let isHovered = false;
+            video.addEventListener('mouseenter', () => isHovered = true);
+            video.addEventListener('mouseleave', () => isHovered = false);
+
+            // Обработка клика ЛКМ и клавиш (Пробел, F11)
+            video.addEventListener('click', (e) => {
+                // Если кликнули по панели управления плеера, не переключаем паузу принудительно
+                // (браузер сам ее обработает), но для чистого клика по холсту видео работает:
+                if (e.offsetY > video.clientHeight - 50) return; // клик по нижней панели
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!isHovered) return; // Срабатывает только если курсор на видео
+
+                if (e.code === 'Space') {
+                    e.preventDefault(); // Предотвращаем прокрутку страницы пробелом
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                } else if (e.key === 'F11') {
+                    e.preventDefault(); // Перехватываем стандартный F11 браузера и делаем полноэкранным именно плеер
+                    if (!document.fullscreenElement) {
+                        if (video.requestFullscreen) {
+                            video.requestFullscreen();
+                        } else if (video.webkitRequestFullscreen) {
+                            video.webkitRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        }
+                    }
+                }
+            });
         }
 
         function startDemoGame() {
@@ -335,7 +397,7 @@
             'battalion-ref': 'tooltip-battalion', 'fnaf-ref': 'tooltip-fnaf',
             'menu-alpha1-ref': 'tooltip-menu-alpha1', 'gazeta-ref': 'tooltip-gazeta',
             'palatka-ref': 'tooltip-palatka', 'izba-ref': 'tooltip-izba',
-            'izba-outside-ref': 'tooltip-izбушка снаружи', 'kalash-ref': 'tooltip-kalash',
+            'izba-outside-ref': 'tooltip-izba-outside', 'kalash-ref': 'tooltip-kalash',
             'symphony-ref': 'tooltip-symphony', 'craylay-ref': 'tooltip-craylay'
         };
 
