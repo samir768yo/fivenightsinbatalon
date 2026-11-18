@@ -299,8 +299,16 @@
                     trailerVideo.pause();
                 }
             }
-        }
 
+            // Выгружаем Ruffle и возвращаем кнопку "Играть" при уходе со вкладки "DEMO-версия"
+            if (tabId !== 'demo') {
+                const swfContainer = document.getElementById('swf-container');
+                if (swfContainer && swfContainer.querySelector('ruffle-player')) {
+                    swfContainer.innerHTML = '<button class="play-demo-btn" onclick="startDemoGame()">Играть</button>';
+                }
+            }
+        }
+        
         function toggleLogo() {
             const logoLink = document.getElementById('smksLogoLink');
             const checkbox = document.getElementById('logoToggle');
