@@ -191,9 +191,10 @@
                 <h2>Скачать игру</h2>
                 <p>Выберите версию для загрузки:</p>
                 <div class="download-buttons">
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/alpha2.zip" class="download-btn" download>Скачать Альфу - 2</a>
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/alpha1.zip" class="download-btn" download>Скачать Альфу - 1</a>
-                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8b%D1%8b%D1%8B/pre-alpha.zip" class="download-btn pre-alpha-link" data-tooltip="pre-alpha" download>Скачать Пре - Альфу</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/five.nigths.at.batalon.zip" class="download-btn" download="five.nigths.at.batalon.zip">Скачать Релиз</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/alpha2.zip" class="download-btn" download>Скачать Альфу - 2</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/alpha1.zip" class="download-btn" download>Скачать Альфу - 1</a>
+                    <a href="https://github.com/samir768yo/fivenightsinbatalon/releases/download/%D1%8B%D1%8B%D1%8B/pre-alpha.zip" class="download-btn pre-alpha-link" data-tooltip="pre-alpha" download>Скачать Пре - Альфу</a>
                 </div>
                 <a href="https://gamejolt.com/games/fivenightsinbatalon/1110884" target="_blank" class="gamejolt-link">Или скачайте на GameJolt</a>
             </div>
@@ -248,7 +249,6 @@
                         <p><strong>биография:</strong> Я Маомао. Идиот, еблан, ютубер, витубер, будущий император человечества.</p>
                     </div>
                     <div class="dev-image-box"><img src="mao.jpg" alt="MaoMao"></div>
-                </div>
                 </div>
             </div>
 
@@ -324,9 +324,7 @@
 
             // Обработка клика ЛКМ и клавиш (Пробел, F11)
             video.addEventListener('click', (e) => {
-                // Если кликнули по панели управления плеера, не переключаем паузу принудительно
-                // (браузер сам ее обработает), но для чистого клика по холсту видео работает:
-                if (e.offsetY > video.clientHeight - 50) return; // клик по нижней панели
+                if (e.offsetY > video.clientHeight - 50) return;
                 if (video.paused) {
                     video.play();
                 } else {
@@ -335,17 +333,17 @@
             });
 
             document.addEventListener('keydown', (e) => {
-                if (!isHovered) return; // Срабатывает только если курсор на видео
+                if (!isHovered) return;
 
                 if (e.code === 'Space') {
-                    e.preventDefault(); // Предотвращаем прокрутку страницы пробелом
+                    e.preventDefault();
                     if (video.paused) {
                         video.play();
                     } else {
                         video.pause();
                     }
                 } else if (e.key === 'F11') {
-                    e.preventDefault(); // Перехватываем стандартный F11 браузера и делаем полноэкранным именно плеер
+                    e.preventDefault();
                     if (!document.fullscreenElement) {
                         if (video.requestFullscreen) {
                             video.requestFullscreen();
